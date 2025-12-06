@@ -1,12 +1,10 @@
 const express = require('express')
 const router = express.Router()
+const { login, register, updateProfile } = require('../controller/userController')
+const { protect } = require('../controller/authController')
 
-//regular user
-router.post('/login', () => { })
-router.post('/register', () => { })
-router.patch('/like', () => { })
-router.get('/favorite-product', () => { })
-//admin
-router.get('/users', () => { })
-//admin get user favorite product list
-router.get('/users/:id', () => { })
+router.post('/login', login)
+router.post('/register', register)
+router.patch('/update-profile', protect, updateProfile)
+//router.patch('/add-favorite-product', () => { })
+//router.get('/favorite-product', () => { })

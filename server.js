@@ -2,8 +2,8 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
-const songsRouter = require('./routes/songs');
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/adminRoutes')
 const mongoose = require('mongoose')
 const cors = require('cors');
 
@@ -22,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes)
 //app.use('/api/product', productRouter);
 
 
