@@ -1,12 +1,23 @@
 // controllers/songsController.js
 const Product = require('../models/Product');
 
+const allowedBrands = ['Nike', 'Adidas', 'Puma', 'Reebok', 'NewBalance'];
+const allowedTypes = ['Shoes', 'Clothing', 'Accessories'];
+
 const getProducts = async (req, res) => {
     try {
         const pageNumber = Math.max(1, parseInt(req.query.page) || 1);
         const pageSize = 9;
 
         const { search = '', brand = '', type = '' } = req.query;
+
+        if (brand && !allowedBrands.includes(brand)) {
+            return res.status(422).json({ error: 'Invalid brand filter' });
+        }
+
+        if (type && !allowedTypes.includes(type)) {
+            return res.status(422).json({ error: 'Invalid type filter' });
+        }
 
         const filter = {};
 
@@ -69,8 +80,20 @@ const createProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const { productId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(422).json({ error: 'Invalid product ID format' });
+        }
+
+
         const removed = await Product.findByIdAndDelete(productId);
-        if (!removed) return res.status(404).json({ error: 'Product not found' });
+        if (!removed) return res.status(404).json({
+            Error: {
+                Code: "NotFound",
+                Message: "Product does not exist"
+            }
+        });
+
         res.json({ message: 'Deleted', id: productId });
     } catch (err) {
         console.error(err);
@@ -81,8 +104,20 @@ const deleteProduct = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const { productId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(422).json({ error: 'Invalid product ID format' });
+        }
+
         const product = await Product.findById(productId)
-        if (!product) return res.status(404).json({ error: 'Product not found' })
+
+        if (!product) return res.status(404).json({
+            Error: {
+                Code: "NotFound",
+                Message: "Product does not exist"
+            }
+        });
+
         res.json(product)
     } catch (err) {
         console.error(err)

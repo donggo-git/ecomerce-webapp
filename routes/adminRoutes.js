@@ -1,7 +1,12 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-//get all users
-router.get('/users', () => { })
-//get user favorite product list
-router.get('/users/:id', () => { })
+const protect = require('../middleware/protect');
+const isAdmin = require('../middleware/isAdmin');
+
+const { getAllUsersSummary, getUserWithFavorites } = require('../controllers/adminController');
+
+router.get('/users', protect, adminProtect, getAllUsersSummary);
+router.get('/users/:userId', protect, adminProtect, getUserWithFavorites);
+
+module.exports = router;

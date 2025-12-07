@@ -5,8 +5,8 @@ const userSchema = mongoose.Schema({
     username: { type: String, require: true, unique: true },
     email: { type: String, require: true, unique: true },
     password: { type: String, require: true },
-    favoriteProduct: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
-    role: { type: String, Enum: ['user', 'admin'], require: true }
+    favoriteProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    role: { type: String, Enum: ['user', 'admin'], require: true, default: "user" }
 })
 
 userSchema.pre('save', async function (next) {

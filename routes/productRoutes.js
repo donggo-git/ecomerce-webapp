@@ -8,3 +8,5 @@ router.get('/:id', getProduct)
 
 router.post('/', adminProtect, createProduct)
 router.delete('/:id', adminProtect, deleteProduct)
+
+module.exports = router
