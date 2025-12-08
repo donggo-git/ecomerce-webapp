@@ -26,6 +26,17 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes)
 app.use('/api/product', productRouter);
 
+// After all other routes in Express app
+app.get('*', (req, res) => {
+    // Check if req.path matches any known route pattern
+    const validPaths = ['/', '/login', '/register', '/home', '/product', '/favorites', '/admin'];
+    const isValid = validPaths.some(path => req.path.startsWith(path));
+    if (!isValid) {
+        res.status(404).sendFile(path.join(__dirname, 'public/404.html'));
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

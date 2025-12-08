@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Product Detail</title>
+    <link rel="stylesheet" href="./style/home.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <h2>E-Shop</h2>
+        <div id="nav-right"></div>
+    </header>
+
+    <div id="detail-container"></div>
+
+    <script>
+        // check if user browse to not valid pages
+        const validPages = [
+            '/',
+            '/index.html',
+            '/login.html',
+            '/register.html',
+            '/home.html',
+            '/detail.html',
+            '/favorites.html',
+            '/admin.html'
+        ];
+
+        // Redirect to 404 if the current pathname is invalid
+        if (!validPages.includes(window.location.pathname)) {
+            window.location.href = '/404.html';
+        }
+
+
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id");
+        const container = document.getElementById("detail-container")
+        const loadData = async () => {
+            try {
+                const res = await fetch(`/api/product/${productId}`)
+                if (!res.ok) {
+                    if (res.status === 404) {
+                        container.innerHTML = `<h1>404 - Product Not Found</h1>`;
+                    } else if (res.status === 422) {
+                        container.innerHTML = `<h1>Invalid Product ID</h1>`;
+                    } else {
+                        throw new Error(`Error ${res.status}`);
+                    }
+                    return;
+                }
+
+                const product = await res.json();
+                if (!product)
+                    throw new Error("Cannot find product")
+                container.innerHTML = `
+                                    <img src="${product.image}" class="detail-img">
+                                    <h2>${product.name}</h2>
+                                    <p>${product.brand}</p>
+                                    <p>${product.type}</p>
+                                    <h3>$${product.price}</h3>
+                                    <button onclick="addFavorite('${product._id}')">Add to Favorites</button>
+                                    `;
+            } catch (err) {
+                container.innerHTML = `<h1>${err.message}</h1>`
+            }
+        }
+        loadData()
+
+        function addFavorite(id) {
+            fetch("/api/users/favorites", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: JSON.stringify({ productId: id })
+            }).then(res => res.json())
+                .then(data => alert(data.message || "Added to favorites"));
+        }
+    </script>
+
+</body>
+
+</html>

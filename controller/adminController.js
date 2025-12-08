@@ -2,6 +2,8 @@ const User = require('../models/User');
 const mongoose = require('mongoose');
 
 const getAllUsers = async (req, res) => {
+    console.log(req.user); // inside adminProtect
+
     try {
         const users = await User.find()
             .select('username email favoriteProducts')
@@ -75,6 +77,6 @@ const getUserWithFavorites = async (req, res) => {
 };
 
 module.exports = {
-    getAllUsersSummary,
+    getAllUsers,
     getUserWithFavorites
 };

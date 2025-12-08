@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Home</title>
+    <link rel="stylesheet" href="/style/home.css" />
+</head>
+
+<body>
+
+    <!-- ✅ HEADER -->
+    <header class="navbar">
+        <h2>E-Commerce</h2>
+        <div id="nav-right"></div>
+        <div id="authArea"></div>
+    </header>
+
+    <!-- ✅ MAIN LAYOUT -->
+    <div class="layout">
+
+        <aside class="filters">
+            <h3>Filters</h3>
+
+            <div class="filter-section">
+                <h4>Brand</h4>
+                <label><input type="checkbox" value="Nike" class="brand-filter" /> Nike</label>
+                <label><input type="checkbox" value="Adidas" class="brand-filter" /> Adidas</label>
+                <label><input type="checkbox" value="Puma" class="brand-filter" /> Puma</label>
+                <label><input type="checkbox" value="Reebok" class="brand-filter" /> Reebok</label>
+                <label><input type="checkbox" value="New Balance" class="brand-filter" /> New Balance
+
+                    <div class="filter-section">
+                        <h4>Type</h4>
+                        <label><input type="checkbox" value="Shoes" class="type-filter" /> Shoes</label>
+                        <label><input type="checkbox" value="Clothing" class="type-filter" /> Clothing</label>
+                        <label><input type="checkbox" value="Accessories" class="type-filter" /> Accessories</label>
+                    </div>
+
+                    <button id="applyFilters">Apply Filters</button>
+        </aside>
+
+        <main class="products-area">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search products..." />
+                <button id="searchBtn">Search</button>
+            </div>
+
+            <div id="productGrid" class="product-grid"></div>
+
+            <div class="pagination">
+                <button id="prevBtn">Previous</button>
+                <span id="pageNumber">1</span>
+                <button id="nextBtn">Next</button>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/script/home.js"></script>
+</body>
+
+</html>

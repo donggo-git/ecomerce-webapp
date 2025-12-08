@@ -1,6 +1,6 @@
 // controllers/songsController.js
 const Product = require('../models/Product');
-
+const mongoose = require('mongoose')
 const allowedBrands = ['Nike', 'Adidas', 'Puma', 'Reebok', 'NewBalance'];
 const allowedTypes = ['Shoes', 'Clothing', 'Accessories'];
 
@@ -73,7 +73,7 @@ const createProduct = async (req, res) => {
         res.status(201).json(product);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Failed to create song' });
+        res.status(500).json({ error: 'Failed to create Product' });
     }
 };
 
@@ -103,13 +103,13 @@ const deleteProduct = async (req, res) => {
 
 const getProduct = async (req, res) => {
     try {
-        const { productId } = req.params;
+        const { id } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(422).json({ error: 'Invalid product ID format' });
         }
 
-        const product = await Product.findById(productId)
+        const product = await Product.findById(id)
 
         if (!product) return res.status(404).json({
             Error: {

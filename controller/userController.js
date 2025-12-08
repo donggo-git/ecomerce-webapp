@@ -67,7 +67,62 @@ const login = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    res.status(200).json({ token });
+    res.status(200).json({
+        token,
+        user: {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            isAdmin: user.role == 'admin'
+        }
+    });
+};
+
+const getUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(422).json({
+                Error: {
+                    Code: "InvalidUserId",
+                    Message: "User ID format is invalid"
+                }
+            });
+        }
+
+        // If the requesting user is not the same and not admin
+        if (req.user._id.toString() !== id && !req.user.isAdmin) {
+            return res.status(403).json({
+                Error: {
+                    Code: "Forbidden",
+                    Message: "You are not allowed to access this user"
+                }
+            });
+        }
+
+        const user = await User.findById(id).select('-password').populate('favoriteProducts');
+
+        if (!user) {
+            return res.status(404).json({
+                Error: {
+                    Code: "NotFound",
+                    Message: "User does not exist"
+                }
+            });
+        }
+
+        res.status(200).json(user);
+
+    } catch (err) {
+        console.error("GET USER ERROR:", err);
+        res.status(500).json({
+            Error: {
+                Code: "InternalServerError",
+                Message: "Failed to fetch user"
+            }
+        });
+    }
 };
 
 
@@ -75,9 +130,6 @@ const verify = async (req, res) => {
     res.json({ user: req.user })
 }
 
-const getProfile = async (req, res) => {
-    res.json(req.user)
-}
 
 const updateProfile = async (req, res) => {
     const { username, email, password } = req.body;
@@ -218,5 +270,5 @@ const getFavoriteProducts = async (req, res) => {
 
 
 module.exports = {
-    register, login, verify, getProfile, updateProfile, addFavoriteProduct, removeFavoriteProduct, getFavoriteProducts
+    register, login, verify, updateProfile, addFavoriteProduct, removeFavoriteProduct, getFavoriteProducts, getUser
 }
